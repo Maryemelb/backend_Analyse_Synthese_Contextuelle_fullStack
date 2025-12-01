@@ -9,3 +9,6 @@ if not database_exists(engine.url):
     create_database(engine.url)
 Base.metadata.create_all(bind=engine)
 
+@app.get('/')
+def initialize():
+    return "hello"
