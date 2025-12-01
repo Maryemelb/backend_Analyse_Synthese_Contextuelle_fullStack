@@ -11,4 +11,4 @@ Base.metadata.create_all(bind=engine)
 
 @app.get('/')
 def initialize():
-    return "app loaded"
+    return "app loaded!"
