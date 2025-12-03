@@ -13,6 +13,6 @@ DATABASE_URL=f"postgresql+psycopg2://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABA
 
 engine= create_engine(DATABASE_URL)
 
-sessionLocal= sessionmaker(autoflush=False, autocommit=False, bin=engine)
+sessionLocal= sessionmaker(autoflush=False, autocommit=False, bind=engine)
 
 Base = declarative_base()
