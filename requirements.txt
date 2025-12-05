@@ -15,3 +15,4 @@ httpx
 pydantic[email]
 sqlalchemy_utils
 dotenv
+google-genai

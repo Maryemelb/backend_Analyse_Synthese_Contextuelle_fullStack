@@ -1,7 +1,7 @@
 
 
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from pytest import Session
 
 from ..schemas.user_schema import user_schema
@@ -27,11 +27,19 @@ def create_token(name):
 
 
 @router.post('/login')
-def login(user: user_schema, db:Session= Depends(getdb)):
+def login(user: user_schema, response: Response, db:Session= Depends(getdb)):
     user_db=db.query(users).filter(users.username == user.username).first()
     if not user_db:
        raise HTTPException(status_code=404, detail="User does not exist")
     if not decrypt_password(user.password , user_db.passwordhash):
         raise HTTPException(status_code=401, detail="Wrong password")
     token = create_token(user_db.username)
-    return token
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        secure=True,       # True if using HTTPS
+        samesite="lax",    # adjust if needed: "strict" | "lax" | "none"
+        max_age=3600       # token expiry in seconds (optional)
+    )
+    return {"message": "Login successful"}
