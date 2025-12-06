@@ -5,6 +5,12 @@ import jwt
 from dotenv import load_dotenv
 load_dotenv()
 
+def create_token(name):
+    payload={
+           "username" :name
+    }
+    return jwt.encode(payload, os.getenv("jwt_secret"), algorithm="HS256")
+
 
 
 def decode_token(token: str):
