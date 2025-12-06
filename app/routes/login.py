@@ -2,8 +2,9 @@
 
 
 from fastapi import APIRouter, Depends, HTTPException, Response
-from pytest import Session
+from sqlalchemy.orm import Session
 
+from app.services.auth_service import create_token  
 from ..schemas.user_schema import user_schema
 from ..models.user import users
 from ..dependencies import getdb
@@ -19,12 +20,6 @@ router=APIRouter(
 context= CryptContext(schemes=["argon2"], deprecated="auto")
 def decrypt_password(inserted_pasword: str, hashed_password: str):
     return context.verify(inserted_pasword, hashed_password)
-def create_token(name):
-    payload={
-           "username" :name
-    }
-    return jwt.encode(payload, os.getenv("jwt_secret"), algorithm="HS256")
-
 
 @router.post('/login')
 def login(user: user_schema, response: Response, db:Session= Depends(getdb)):
@@ -38,8 +33,8 @@ def login(user: user_schema, response: Response, db:Session= Depends(getdb)):
         key="access_token",
         value=token,
         httponly=True,
-        secure=True,       # True if using HTTPS
-        samesite="lax",    # adjust if needed: "strict" | "lax" | "none"
-        max_age=3600       # token expiry in seconds (optional)
+        secure=True,     
+        samesite="None",
+        path="/"   
     )
     return {"message": "Login successful"}

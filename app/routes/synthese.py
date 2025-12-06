@@ -3,8 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 import jwt
 import os
 from dotenv import load_dotenv
-from pytest import Session
-
+from sqlalchemy.orm import Session
 from app.dependencies import getdb
 from app.models.synthese_logs import synthese_logs
 from app.models.user import users
@@ -17,12 +16,13 @@ load_dotenv()
 router= APIRouter(
     tags=['Main']
 )
-oauth_schema = OAuth2PasswordBearer(tokenUrl="token")
 
 
 @router.post('/analyze')
 async def synthese(article: inserted_article,request:Request, db:Session= Depends(getdb)):
     token= request.cookies.get('access_token')
+    if not token:
+        raise HTTPException(status_code=401, detail="Token not found")
     payload= decode_token(token)
     if not verify_user_in_db(payload["username"],db):
        raise HTTPException(status_code=403, detail="User not authorized")
