@@ -7,7 +7,7 @@ from ..models.user import users
 from passlib.context import CryptContext
 
 router= APIRouter(
-         prefix="/auth",
+         prefix="/Auth",
          tags= ["Auth"]
 )
 
