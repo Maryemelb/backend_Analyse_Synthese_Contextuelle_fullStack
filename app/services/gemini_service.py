@@ -17,7 +17,7 @@ def sumerize(article,category_predict):
     response = client.models.generate_content(
       model="gemini-2.5-flash",
       config=types.GenerateContentConfig(
-        system_instruction="be as a seller an i want to buy something."),
+        system_instruction="be a good writer"),
       contents=prompt
     )
     return response.text if hasattr(response, "text") else None
