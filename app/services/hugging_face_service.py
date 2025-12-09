@@ -10,7 +10,7 @@ async def classify_article(article,labels):
     "Authorization": f"Bearer {os.environ['HF_TOKEN']}",
      }
    def query(payload):
-      response =httpx.post(API_URL, headers=headers, json=payload, timeout=60.0)
+      response =httpx.post(API_URL, headers=headers, json=payload)
       return response.json()
    output = query({
     "inputs": article,
