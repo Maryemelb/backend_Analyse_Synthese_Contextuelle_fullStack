@@ -1,26 +1,42 @@
 import pytest
 
 from app.services.hugging_face_service import classify_article, predict_ton 
-
+from unittest.mock import Mock, AsyncMock
 
 @pytest.fixture
 def article():
-    return 'Like most entrepreneurs, I struggled through my first year of building a business.I launched my first product without having any idea who I would sell it to. (Big surprise, nobody bought it.) I reached out to important people, mismanaged expectations, made stupid mistakes, and essentially ruined the chance to build good relationships with people I respected. I attempted to teach myself how to code, made one change to my website, and deleted everything I had done during the previous three months.'
+    return 'pytest-mock est un package de pytest qui facilite la création de mocks (faux objets) pendant les tests.", ["pytest-mock'
 
 @pytest.mark.anyio
-async def test_classify_article(article):
-    categories= ['business','monney', 'challenge' ]
-    detected_cat=await classify_article(article, categories)
-    assert detected_cat is not None
-    assert isinstance(detected_cat['label'], str)
-    assert isinstance(detected_cat['score'], float)
+async def test_classify_article(mocker):
+  fake_response= [
+     {"label": "pytest-mock", "score":0.8},
+     {"label": "marketing", "score":0.3}
+  ]
+  fake=mocker.Mock()
+  fake.status_code = 200
+  fake.json.return_value= fake_response
+
+  mocker.patch('app.services.hugging_face_service.httpx.post', return_value=fake)
+  result = await classify_article(article, ["marketing","pytest-mock"])
+  assert result["label"] == "pytest-mock"
+  assert result["score"] == 0.8
+
 
 
 @pytest.mark.anyio
-async def test_predict_ton():
-    resume= 'L’auteur raconte avoir rencontré de nombreuses difficultés lors de sa première année d’entrepreneuriat : lancement d’un produit sans cible définie, erreurs dans la gestion des relations avec des personnes influentes, mauvais choix stratégiques, et même la perte de plusieurs mois de travail en essayant d’apprendre à coder et en modifiant maladroitement son site web.'
-    predicted_ton= await predict_ton(resume)
-    assert predicted_ton
-    assert isinstance(predicted_ton, str)
+async def test_predict_ton(mocker):
+   fake_response= [[
+      {"label": "5 stars", "score":0.7},
+      {"label": "3 stars", "score":0.3},
+      {"label": "1 star", "score":0.1}
+   ]]
+  
 
+   make_mocker_post= mocker.patch("app.services.hugging_face_service.httpx.post")
+   make_mocker_post.return_value.json.return_value= fake_response
+   
+   resume= 'L auteur raconte avoir rencontré de nombreuses difficultés lors de sa première année dentrepreneuriat'
+   result=await predict_ton(resume)
+   assert result== "positive"
 
