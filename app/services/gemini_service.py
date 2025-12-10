@@ -3,6 +3,7 @@ from google.genai import types
 import os
 import google.genai as genai
 def sumerize(article,category_predict):
+    
     client = genai.Client(api_key=os.environ["GEMINI_API"])
     prompt= f"""
     Tu es un assistant expert en résumé.

@@ -2,6 +2,7 @@ import os
 import httpx
 from dotenv import load_dotenv
 import httpx
+from .logging_config import logger
 load_dotenv()
 
 async def classify_article(article,labels):

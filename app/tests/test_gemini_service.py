@@ -11,3 +11,4 @@ def test_sumerize(article):
     text_summerized= sumerize(article, category_predict)
     assert text_summerized is not None
     assert isinstance(text_summerized, str )
+    
