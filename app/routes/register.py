@@ -5,7 +5,7 @@ from ..schemas.user_schema import user_schema
 from ..dependencies import getdb
 from ..models.user import users
 from passlib.context import CryptContext
-
+from .logging_config import logger
 router= APIRouter(
          prefix="/Auth",
          tags= ["Auth"]
@@ -20,6 +20,7 @@ def hash_password(passwod: str):
 def register(inserted_user: user_schema,db:Session= Depends(getdb)):
     user_in_db= db.query(users).filter(users.username== inserted_user.username).first()
     if user_in_db:
+        logger.warning(f'{inserted_user.username} already exist')
         raise HTTPException(status_code=409, detail="User already Exist try login")
     hashed_password= hash_password(inserted_user.password)
     user_db=users(
