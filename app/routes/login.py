@@ -12,12 +12,18 @@ from passlib.context import CryptContext
 import jwt
 import os
 from dotenv import load_dotenv
+from .logging_config import logger
 load_dotenv()
 router=APIRouter(
     prefix="/Auth",
     tags=["Auth"]
 )
+
+
+
+
 context= CryptContext(schemes=["argon2"], deprecated="auto")
+
 def decrypt_password(inserted_pasword: str, hashed_password: str):
     return context.verify(inserted_pasword, hashed_password)
 
@@ -25,8 +31,10 @@ def decrypt_password(inserted_pasword: str, hashed_password: str):
 def login(user: user_schema, response: Response, db:Session= Depends(getdb)):
     user_db=db.query(users).filter(users.username == user.username).first()
     if not user_db:
+       logger.warning('login failed : user does not exist')
        raise HTTPException(status_code=404, detail="User does not exist")
     if not decrypt_password(user.password , user_db.passwordhash):
+        logger.warning(f'{user.username} inserted a wrong password')
         raise HTTPException(status_code=401, detail="Wrong password")
     token = create_token(user_db.username)
     response.set_cookie(
