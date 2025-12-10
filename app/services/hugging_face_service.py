@@ -10,9 +10,8 @@ async def classify_article(article,labels):
    headers = {
     "Authorization": f"Bearer {os.environ['HF_TOKEN']}",
      }
-
    def query(payload):
-      response =httpx.post(API_URL, headers=headers, json=payload, timeout=60.0)
+      response =httpx.post(API_URL, headers=headers, json=payload)
       return response.json()
    output = query({
     "inputs": article,
@@ -22,6 +21,8 @@ async def classify_article(article,labels):
 
    return detected_category
 
+
+
 async def predict_ton(resume: str):
 
   API_URL = os.environ['HUGGING_FACE_API_TON']
@@ -29,14 +30,14 @@ async def predict_ton(resume: str):
     "Authorization": f"Bearer {os.environ['HF_TOKEN']}",
    }
 
-  async def query(payload):
-    async with httpx.AsyncClient(timeout=60.0) as client:
-      response =await client.post(API_URL, headers=headers, json=payload)
+  def query(payload):
+      response = httpx.post(API_URL, headers=headers, json=payload)
       return response.json()
 
-  output =await query({
+  output = query({
     "inputs": resume,
     })
+  print(output)
   predicted_ton= max(output[0], key=lambda x:x["score"])
   mapping= {
     "1 star": "negative",
@@ -46,4 +47,5 @@ async def predict_ton(resume: str):
     "5 stars": "positive"
   }
   # mapping.get(predicted_ton['label'], "neutral")
+  print(mapping.get(predicted_ton['label'], "neutral"))
   return mapping.get(predicted_ton['label'], "neutral")
