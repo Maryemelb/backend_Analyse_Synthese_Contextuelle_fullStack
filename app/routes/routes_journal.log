@@ -1,0 +1,6 @@
+ERROR -2025-12-09 12:33:48,879 -routes_journal.log -m inserted a wrong password
+ERROR -2025-12-09 12:34:34,236 -routes_journal -m inserted a wrong password
+WARNING -2025-12-09 12:37:36,784 -routes_journal -m inserted a wrong password
+WARNING -2025-12-09 12:39:54,648 -routes_journal -m inserted a wrong password
+WARNING -2025-12-09 12:43:21,266 -routes_journal -m already exist
+WARNING :2025-12-09 12:44:09,083 :routes_journal :m inserted a wrong password

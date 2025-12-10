@@ -17,3 +17,4 @@ sqlalchemy_utils
 dotenv
 google-genai
 pytest-mock
+logging
