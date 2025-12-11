@@ -5,13 +5,20 @@ from .routes.register import router as signup_router
 from .routes.login import router as loging_router
 from .routes.synthese import router as resume_router
 from fastapi.middleware.cors import CORSMiddleware
-
+import os
+import uvicorn
 app=FastAPI()
+PORT = int(os.environ.get("PORT", 8000))
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=PORT, reload=True)
+
 origins=[
     "http://localhost:3000", 
     "http://127.0.0.1:3000",
     "http://localhost:8000",
-    "http://127.0.0.1:8000"
+    "http://127.0.0.1:8000",
+    "http://backend:8000"
 ]
 app.add_middleware(
     CORSMiddleware,
